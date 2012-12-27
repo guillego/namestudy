@@ -1,0 +1,12 @@
+*.png
+pruebas
+salt/*.html
+salt/*.summary
+salt/babynames.pyc
+salt/login.php
+salt/trying.py
+salt/unos.png
+salt/pruebahist.py
+salt/pruebalista.py
+.DS_Store
+img/*
