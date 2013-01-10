@@ -32,6 +32,8 @@ def dameNombres(file_year):
   listNames['F'] = n2rF
 
   return listNames
+
+#Crea la lista del "aula" con la capacidad especificada en 'tam' y la distribuye siguiendo el Sistema D'Hont
 def listaAula(y1,tam,gen):
   listY = dameNombres(str(y1))[gen]
   listN = {}
@@ -49,63 +51,28 @@ def listaAula(y1,tam,gen):
     maximo = 0
   return listN
 
-def probLista(list20):
-  for k in list20.keys():
-    list20[k] = float(list20[k])/float(sumValues(list20))
-  return list20
+#Dada una lista con nombres y un numero de presonas con ese nombre, calcula la probabilidad de cada nombre
+def probLista(laLista):
+  for k in laLista.keys():
+    laLista[k] = float(laLista[k])/float(sumValues(laLista))
+  return laLista
 
+#Dada una lista con 1000 nombres, la reduce a los 'size' valores más altos
 def reduceYear(y, size, gen):
   miLista = dameNombres(str(y))[gen]
   keysOrd = sorted(miLista, key=miLista.__getitem__, reverse=True)
   i=0
-  list20 = {}
+  laLista = {}
   for k in keysOrd:
     if(i>size): break
     else:
-      list20[k] = miLista[k]
+      laLista[k] = miLista[k]
       i+=1
-  for k in list20.keys():
-    list20[k] = float(list20[k])/float(sumValues(list20))
-  return list20
+  for k in laLista.keys():
+    laLista[k] = float(laLista[k])/float(sumValues(laLista))
+  return laLista
 
-def num2prob(listaNum):
-  suma = sumValues(listaNum)
-  for k in sorted(listaNum.keys()):
-    listaNum[k] = float(listaNum[k])/float(suma)
-  return listaNum
-
-#A partir de dos listas, crea una nueva anadiendo directamente los elementos no comunes y sumando los valores de los elementos comunes a las dos
-def sum2Years(listY1, listY2):
-  listY = {}
-  for key in sorted(listY1.keys()):
-    listY[key] = listY1[key] + listY2.get(key, 0)
-    if(listY2.get(key,0) != 0): del listY2[key]
-  for key in sorted(listY2.keys()):
-    listY[key] = listY2[key]
-  return listY
-
-"""for key in sorted(listY.keys()):
-  print key, listY[key]"""
-
-
-#Nos devuelve la lista combinada de 
-def sumYears(age2, age1):
-  now = datetime.datetime.now()
-  y1 = now.year - age1
-  y2 = now.year - age2
-  years = range(y1+1,y2+1,1)
-  sumListM = dameNombres(str(y1))['M']
-  for y in years:
-    sumListM = sum2Years(sumListM,dameNombres(str(y))['M'])
-
-  sumListF = dameNombres(str(y1))['F']
-  for y in years:
-    sumListF = sum2Years(sumListF,dameNombres(str(y))['F'])
-  sumList = {}
-  sumList['M'] = sumListM
-  sumList['F'] = sumListF
-  return sumList
-
+#Calcula el nombre con mas popularidad en un anio
 def maxKey(lista):
   maxVal = 0
   for key in sorted(lista.keys()):
@@ -114,17 +81,9 @@ def maxKey(lista):
       maxKey = key
   return maxKey
 
+#Halla el numero de personas total sumando el numero de personas con cada nombre
 def sumValues(lista):
   suma = 0
   for key in sorted(lista.keys()):
     suma = suma + lista[key]
   return suma
-def nameInYears(name):
-  ann = ["1989","1990","1991","1992","1993","1994"]
-  listaArr = []
-  for a in ann:
-    l = dameNombres(a)['M']
-    for k in sorted(l.keys()):
-      if(k == name):
-        listaArr.append(l[k])
-  return listaArr
