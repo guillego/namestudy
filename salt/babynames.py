@@ -65,7 +65,7 @@ def reduceYear(y, size, gen):
       list20[k] = miLista[k]
       i+=1
   for k in list20.keys():
-    list20[k] = float(list20[k])/float(list20[maxKey(list20)])
+    list20[k] = float(list20[k])/float(sumValues(list20))
   return list20
 
 def num2prob(listaNum):
