@@ -10,7 +10,6 @@ def dameNombres(file_year):
   archivo = open('html/' + file_year + '.html', 'r')
   archivo_string = archivo.read()
 
-
   #encontramos el anio
   textos = re.search(r'(Popularity\sin\s)(\d*)', archivo_string)
   miyear = textos.group(2)
@@ -23,7 +22,7 @@ def dameNombres(file_year):
   for rank_tuple in texto2:
     (boyname, rankboy, girlname, rankgirl) = rank_tuple  # desempaquetamos las tuplas
     if boyname not in n2rM:
-      n2rM[boyname] = int(rankboy.replace(',', ''))
+      n2rM[boyname] = int(rankboy.replace(',', '')) #quito las comas y convierto los valores a numeros
     if girlname not in n2rF:
       n2rF[girlname] = int(rankgirl.replace(',', ''))
 
@@ -33,27 +32,8 @@ def dameNombres(file_year):
   listNames['F'] = n2rF
 
   return listNames
-
-def listaAula(ed1,por1,ed2,por2,tam,gen):
-  now = datetime.datetime.now()
-  y1 = now.year - ed1
-  y2 = now.year - ed2
-  milista1 = dameNombres(str(ed1))[gen]
-  listY = milista1
-  if (por2 > 0):
-    for key in sorted(milista1.keys()):
-      milista1[key] = round(float(milista1[key])*float(por1)/100)
-    milista2 = dameNombres(str(ed2))[gen]
-    for key in sorted(milista2.keys()):
-      milista2[key] = round(float(milista2[key])*float(por2)/100)
-
-    listY = {}
-    for key in sorted(milista1.keys()):
-      milista1[key] = milista1[key] + milista2.get(key, 0)
-      if(milista2.get(key,0) != 0): del milista2[key]
-    for key in sorted(milista2.keys()):
-      listY[key] = milista2[key]
-
+def listaAula(y1,tam,gen):
+  listY = dameNombres(str(y1))[gen]
   listN = {}
   maximo=0
   while (sumValues(listN) < tam):
@@ -67,25 +47,32 @@ def listaAula(ed1,por1,ed2,por2,tam,gen):
       listN[maxKey] = 1
     listY[maxKey] = float(listY[maxKey])/2
     maximo = 0
-  """suma = sumValues(listY)
-  for key in sorted(listY.keys()):
-    listY[key] = 2.4*float(tam)*float(listY[key])/float(suma)
-  for key in sorted(listY.keys()):
-    listY[key] = round(listY[key])
-  for key in sorted(listY.keys()):
-    if(listY[key] < 1): del listY[key]"""
-  suma = sumValues(listN)
-  #keysOr = list(sorted(listY, key=listY.__getitem__, reverse=True))
-  #valuesOr = []
-  #for v in sorted(listY.values(), reverse=True):
-    #valuesOr.append(v)
-
-  #misKeys = keysOr[:tam]
-  #misValues = valuesOr[:tam]
-  #miAula = {}
-  #for n in range(0,tam):
-    #miAula[misKeys[n]] = misValues[n]
   return listN
+
+def probLista(list20):
+  for k in list20.keys():
+    list20[k] = float(list20[k])/float(list20[maxKey(list20)])
+  return list20
+
+def reduceYear(y, size, gen):
+  miLista = dameNombres(str(y))[gen]
+  keysOrd = sorted(miLista, key=miLista.__getitem__, reverse=True)
+  i=0
+  list20 = {}
+  for k in keysOrd:
+    if(i>size): break
+    else:
+      list20[k] = miLista[k]
+      i+=1
+  for k in list20.keys():
+    list20[k] = float(list20[k])/float(list20[maxKey(list20)])
+  return list20
+
+def num2prob(listaNum):
+  suma = sumValues(listaNum)
+  for k in sorted(listaNum.keys()):
+    listaNum[k] = float(listaNum[k])/float(suma)
+  return listaNum
 
 #A partir de dos listas, crea una nueva anadiendo directamente los elementos no comunes y sumando los valores de los elementos comunes a las dos
 def sum2Years(listY1, listY2):
@@ -140,32 +127,4 @@ def nameInYears(name):
     for k in sorted(l.keys()):
       if(k == name):
         listaArr.append(l[k])
-  #mVal = 0
-  #for r in listaArr:
-  #  if(r > mVal):
-  #    mVal = r
-  #for r in range(len(listaArr)):
-  #  listaArr[r] = float(listaArr[r])/float(mVal)
   return listaArr
-
-def main():
-  args = sys.argv[1:]
-
-  if not args:
-    print 'usage: [--nombre_archivo] file [file ...]'
-    sys.exit(1)
-
-  summary = False
-  if args[0] == '--nombre_archivo':
-    summary = True
-    del args[0]
-
-  for cosa in args:
-      mistring = dame_nombres(cosa)
-      if summary:
-          outf = open(cosa + '.summary', 'w')
-          outf.write(mistring + '\n')
-          outf.close()
-
-if __name__ == '__main__':
-  main()
