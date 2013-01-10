@@ -51,7 +51,7 @@ def listaAula(y1,tam,gen):
 
 def probLista(list20):
   for k in list20.keys():
-    list20[k] = float(list20[k])/float(list20[sumValues(list20)])
+    list20[k] = float(list20[k])/float(sumValues(list20))
   return list20
 
 def reduceYear(y, size, gen):
